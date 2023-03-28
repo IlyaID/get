@@ -1,5 +1,4 @@
 import RPi.GPIO as GPIO
-5
 
 
 def decimal2binary(value, n):
