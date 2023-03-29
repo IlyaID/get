@@ -3,6 +3,7 @@ import time
 import sys
 
 
+
 DAC = [26, 19, 13, 6, 5, 11, 9, 10]
 bits = len(DAC)
 levels = 2**bits
@@ -12,6 +13,7 @@ troykaModule = 17
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(DAC, GPIO.OUT, initial = GPIO.LOW)
 GPIO.setup(troykaModule, GPIO.OUT, initial = GPIO.HIGH)
+GPIO.setup(co)
 
 def decimal2binary(value, n):
     return [int(element) for element in bin(value)[2:].zfill(n)]
@@ -19,6 +21,7 @@ def decimal2binary(value, n):
 def num2dac(value):
     signal = decimal2binary(value)
     GPIO.output(DAC, signal)
+    return signal 
 
 try:
     while True:
