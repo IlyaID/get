@@ -5,7 +5,7 @@ import time
 DAC = [26, 19, 13, 6, 5, 11, 9, 10]
 bits = len(DAC)
 levels = 2**bits
-maxVoltage = 3.3
+maxVoltage = 3,3
 troykaModule = 17
 comparator = 4
 
@@ -22,15 +22,12 @@ def num2dac(value):
     signal = decimal2binary(value)
     GPIO.output(DAC, signal)
 
-def adc(value):
-    return value / levels * maxVoltage
-
 try:
     while True:
         for value in range(256):
             time.sleep(0.0007)
             signal = num2dac(value)
-            voltage = adc(value)
+            voltage = value / levels * maxVoltage
             comparatorValue = GPIO.input(comparator)
             if comparatorValue == 0:
                 print("Entered value = {:^3} -> {}, output voltage = {:.2f}".format(value, signal, voltage))
