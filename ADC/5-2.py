@@ -30,21 +30,17 @@ def adc(value):
 
 try:
     while True:
-        for value in range(256):
-            
+        for value in range(7, -1, -1):
+            time.sleep(0.0007)
             signal = num2dac(value)
             voltage = adc(value)
-            
-            
-            time.sleep(0.01)
             comparatorValue = GPIO.input(comparator)
-
-            print(comparatorValue)
             #print("ADC value = {:^3} -> {}, output voltage = {:.2f}".format(value, signal, voltage))
             if comparatorValue == 0:
                 print("ADC value = {:^3} -> {}, output voltage = {:.2f}".format(value, signal, voltage))
-                #break
-            
+            else:
+                print(voltage)
+                break
                 
                 
 
