@@ -20,6 +20,9 @@ def num2dac(value):
     signal = decimal2binary(value)
     GPIO.output(DAC, signal)
 
+def adc(value):
+    return value / levels * maxVoltage
+
 try:
     while True:
         input_value = input('Please enter value between 0 and 255 ("q" to exit) > \n')

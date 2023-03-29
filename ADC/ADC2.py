@@ -1,6 +1,5 @@
 import RPi.GPIO as GPIO
 import time
-import sys
 
 
 DAC = [26, 19, 13, 6, 5, 11, 9, 10]
@@ -23,26 +22,25 @@ def num2dac(value):
     signal = decimal2binary(value)
     GPIO.output(DAC, signal)
 
+def adc(value):
+    return value / levels * maxVoltage
+
 try:
     while True:
         for value in range(256):
             time.sleep(0.0007)
             signal = num2dac(value)
-            voltage = value / levels * maxVoltage
+            voltage = adc(value)
             comparatorValue = GPIO.input(comparator)
             if comparatorValue == 0:
                 print("Entered value = {:^3} -> {}, output voltage = {:.2f}".format(value, signal, voltage))
                 break
 
-       
-                
-        
-
 except ValueError:
     print('Please enter number from 0 to 255\n')
 
 except KeyboardInterrupt:
-    print('\m The program was stopped by the keyboard')  
+    print('\n The program was stopped by the keyboard')  
 
 finally:
     GPIO.output(DAC, GPIO.LOW)
