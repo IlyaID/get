@@ -8,6 +8,8 @@ levels = 2**bits
 maxVoltage = 3.3
 troykaModule = 17
 comparator = 4
+weight = [128, 64, 32, 16, 8, 4, 2, 1]
+
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(DAC, GPIO.OUT, initial = GPIO.LOW)
@@ -23,18 +25,20 @@ def decimal2binary(value, n):
    # GPIO.output(DAC, signal)
    # return signal
 
+
 def adc():
-    for value in range(256):
-            signal = decimal2binary(value, 8)
-            GPIO.output(DAC, signal)
-            time.sleep(0.01)
-            voltage = value / levels * maxVoltage
-            comparatorValue = GPIO.input(comparator)
-            print(comparatorValue)
-            #print("ADC value = {:^3} -> {}, output voltage = {:.2f}".format(value, signal, voltage))
-            if comparatorValue == 0:
-                print("ADC value = {:^3} -> {}, output voltage = {:.2f}".format(value, signal, voltage))
-                break
+    summary = 0
+    for value in range(8):
+        signal = decimal2binary(summary + weight[value],8)
+        GPIO.output(DAC, signal)
+        time.sleep(0.01)
+        comparatorValue = GPIO.input(comparator)
+        if(comparatorValue == 1):
+            summary += weight[value]
+        signal = decimal2binary(summary,8)
+        voltage = summary / levels * maxVoltage
+        if comparatorValue == 0:
+            print("ADC value = {:^3} -> {}, output voltage = {:.2f}".format(value, signal, voltage))
 try:
     while True:
         adc()
