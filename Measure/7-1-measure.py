@@ -38,7 +38,7 @@ def adc():
         signal = decimal2binary(summary + weight[value],8)
         GPIO.output(DAC, signal)
         time.sleep(0.01)
-        if(GPIO.input(comparator) == 0):
+        if(GPIO.input(comparator) == 1):
             summary += weight[value]
         signal = decimal2binary(summary,8)
         for value in range(8):
@@ -61,8 +61,8 @@ try:
 
     #ЗАРЯДКА КОНДЕНСАТОРА И ЗАПИСЬ ПОКАЗАНИЙ В ОПЕРАТИВНУЮ ПАМЯТЬ
         
-    print('начало зарядки конденсатора')
-    while voltage < 3.3:
+    print('\n начало зарядки конденсатора\n')
+    while voltage < 3.2:
         summary = adc()
         voltage = summary / levels * maxVoltage
         print('voltage = {}'.format(voltage))
@@ -79,7 +79,7 @@ try:
 
     #ЗАРЯДКА КОНДЕНСАТОРА И ЗАПИСЬ ПОКАЗАНИЙ В ОПЕРАТИВНУЮ ПАМЯТЬ
 
-    print('начало разрядки конденсатора')
+    print('\n начало разрядки конденсатора\n')
     while voltage > 0.1:
         summary = adc()
         print('voltage = {}'.format(voltage))
@@ -98,7 +98,7 @@ try:
 
     #ЗАПИСЬ ДАННЫХ В ФАЙЛ
 
-    print('запись данных в файл')
+    print('\n запись данных в файл\n')
     with open('data.txt', 'w') as f:
         for i in result_of_experement:
             f.write(str(i) + '\n')
@@ -106,16 +106,18 @@ try:
         f.write(str(1/time_of_experiment/counter) + '\n')
         f.write('0.01289')
     
-    print('Общая продолжительность эксперимента {}, период одного измерения {}, средняя частота дискретизации {}'.format(time_of_experiment, time_of_experiment/counter, 1/time_of_experiment/counter))
+    print('\n Общая продолжительность эксперимента {}, период одного измерения {}, средняя частота дискретизации {} \n'.format(time_of_experiment, time_of_experiment/counter, 1/time_of_experiment/counter))
 
     #ПОСТРОЕНИЕ ГРАФИКА ЗАВИСИМОСТИ НАПРЯЖЕНИЯ НА КОНДЕНСАТОРЕ ОТ ВРЕМЕНИ V(t)
 
-    print('построение графика')
-    y=[i/256*3.3 for i in result_of_experement]
+    print('\n построение графика\n')
+    y=[i for i in result_of_experement]
     x=[i*time_of_experiment/counter for i in range(len(result_of_experement))]
+    pyplot.figure (figsize = (8, 6), dpi = 200)
     pyplot.plot(x, y)
     pyplot.xlabel('time')
     pyplot.ylabel('Voltage')
+    pyplot.savefig ("plt.png")
     pyplot.show()
 
 finally:
